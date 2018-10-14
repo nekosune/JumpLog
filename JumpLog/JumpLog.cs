@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace JumpLog
 {
@@ -62,6 +64,29 @@ namespace JumpLog
 
         private  bool SaveLog()
         {
+
+            if (String.IsNullOrEmpty(this.FileName))
+            {
+                saveFileDialog1.Filter = "Jump Files|*.jmp";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.CheckPathExists = true;
+                if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+                {
+                    return false;
+                    
+                    
+                }
+                FileName = saveFileDialog1.FileName;
+            }
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(FileName))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, Log);
+                // {"ExpiryDate":new Date(1230375600000),"Price":0}
+            }
+
+            Dirty = false;
             return true;
         }
 
@@ -195,6 +220,34 @@ namespace JumpLog
         {
             Log.TrueVisage = TrueVisageTextBox.Text;
             Dirty = true;
+        }
+
+        private void openToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (Dirty)
+            {
+                DialogResult result = MessageBox.Show("Do you want to save changes?", "JumpLog",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Cancel)
+                    return;
+                if (result == DialogResult.Yes)
+                {
+                    if (!SaveLog())
+                        return;
+                }
+            }
+            openFileDialog1.Filter = "Jump Files|*.jmp";
+            openFileDialog1.CheckFileExists = true;
+            openFileDialog1.AddExtension = true;
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                String filename = openFileDialog1.FileName;
+            }
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            SaveLog();
         }
     }
 }

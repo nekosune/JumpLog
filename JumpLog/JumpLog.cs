@@ -90,29 +90,7 @@ namespace JumpLog
             return true;
         }
 
-        private void ResetForm()
-        {
-            TrueNameTextBox.Text = "";
-            OriginalAliasTextBox.Text = "";
-            OriginalAgeTextBox.Text = "";
-            OriginHeightTextBox.Text = "";
-            OriginSexComboBox.Text = "";
-            OriginWeightTextBox.Text = "";
-            OriginBIographyTextbox.Text = "";
-            OriginAppearenceTextBox.Text = "";
-            JumperNameTextBox.Text = "";
-            JumperAliasTextBox.Text = "";
-            BenefactorTextBox.Text = "";
-            TrueAgeTextBox.Text = "";
-            SpeciesTextBox.Text = "";
-            TrueGenderComboBox.Text = "";
-            TrueHeightTextBox.Text = "";
-            TrueWeightTextBox.Text = "";
-            TrueWeightTextBox.Text = "";
-            HomePlaneTextBox.Text = "";
-            TrueVisageTextBox.Text = "";
-            Dirty = false;
-        }
+        
 
         private void TrueNameTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -241,8 +219,65 @@ namespace JumpLog
             openFileDialog1.AddExtension = true;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                String filename = openFileDialog1.FileName;
+                FileName = openFileDialog1.FileName;
+
+                JsonSerializer serializer = new JsonSerializer();
+                using (StreamReader sr = new StreamReader(FileName))
+                using (JsonReader reader = new JsonTextReader(sr))
+                {
+                    Log = serializer.Deserialize<Log>(reader);
+                    SyncForm();
+                    // {"ExpiryDate":new Date(1230375600000),"Price":0}
+                }
+
+                Dirty = false;
             }
+        }
+
+        private void SyncForm()
+        {
+            TrueNameTextBox.Text = Log.TrueName;
+            OriginalAliasTextBox.Text = Log.Alias;
+            OriginalAgeTextBox.Text = Log.OriginalAge;
+            OriginHeightTextBox.Text = Log.OriginalHeight;
+            OriginSexComboBox.Text = Log.OriginalSex;
+            OriginWeightTextBox.Text = Log.OriginalWeight;
+            OriginBIographyTextbox.Text = Log.OriginalBiography;
+            OriginAppearenceTextBox.Text = Log.OriginalAppearence;
+            JumperNameTextBox.Text = Log.JumperName;
+            JumperAliasTextBox.Text = Log.JumperAlias;
+            BenefactorTextBox.Text = Log.Benefactor;
+            TrueAgeTextBox.Text = Log.TrueAge;
+            SpeciesTextBox.Text = Log.Species;
+            TrueGenderComboBox.Text = Log.TrueGender;
+            TrueHeightTextBox.Text = Log.TrueHeight;
+            TrueWeightTextBox.Text = Log.TrueWeight;
+            HomePlaneTextBox.Text = Log.HomePlane;
+            TrueVisageTextBox.Text = Log.TrueVisage;
+        }
+
+        private void ResetForm()
+        {
+            TrueNameTextBox.Text = "";
+            OriginalAliasTextBox.Text = "";
+            OriginalAgeTextBox.Text = "";
+            OriginHeightTextBox.Text = "";
+            OriginSexComboBox.Text = "";
+            OriginWeightTextBox.Text = "";
+            OriginBIographyTextbox.Text = "";
+            OriginAppearenceTextBox.Text = "";
+            JumperNameTextBox.Text = "";
+            JumperAliasTextBox.Text = "";
+            BenefactorTextBox.Text = "";
+            TrueAgeTextBox.Text = "";
+            SpeciesTextBox.Text = "";
+            TrueGenderComboBox.Text = "";
+            TrueHeightTextBox.Text = "";
+            TrueWeightTextBox.Text = "";
+            TrueWeightTextBox.Text = "";
+            HomePlaneTextBox.Text = "";
+            TrueVisageTextBox.Text = "";
+            Dirty = false;
         }
 
         private void saveToolStripButton_Click(object sender, EventArgs e)
